@@ -133,7 +133,7 @@ class RemoteInputHandler {
 
         let action = menuBarManager?.getMapping(for: buttonName) ?? ButtonAction.none
         if pressed {
-            print("🔘 Button pressed: \(buttonName) → \(action.rawValue)")
+            rmDebug("🔘 Button pressed: \(buttonName) → \(action.rawValue)")
         }
         executeAction(action, button: buttonName, pressed: pressed)
     }
@@ -278,6 +278,7 @@ class RemoteInputHandler {
         let src = CGEventSource(stateID: .hidSystemState)
         let event = CGEvent(keyboardEventSource: src, virtualKey: CGKeyCode(keyCode), keyDown: keyDown)
         event?.flags = flags
+        rmDebug("Keyboard event: keyCode=\(keyCode) down=\(keyDown) created=\(event != nil) postEvents=\(CGPreflightPostEventAccess())")
         event?.post(tap: .cghidEventTap)
     }
 

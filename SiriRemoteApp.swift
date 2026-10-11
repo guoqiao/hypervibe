@@ -130,8 +130,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case .playPause:  buttonName = "playPause"
         case .next:       buttonName = "nextTrack"
         case .previous:   buttonName = "prevTrack"
-        case .volumeUp:   buttonName = "volumeUp"
-        case .volumeDown: buttonName = "volumeDown"
+        case .volumeUp, .volumeDown:
+            // Global media events do not identify the device. Remote volume mappings
+            // are handled by RemoteInputHandler; leave keyboard volume keys unchanged.
+            return false
         case .mute:       buttonName = "mute"
         }
 
@@ -158,7 +160,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // macOS will show its own prompt when needed
         // No need for redundant custom alert
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-        _ = AXIsProcessTrustedWithOptions(options)
+        let trusted = AXIsProcessTrustedWithOptions(options)
+        rmDebug("Permissions: accessibility=\(trusted) postEvents=\(CGPreflightPostEventAccess()) inputMonitoring=\(CGPreflightListenEventAccess())")
     }
 }
 
